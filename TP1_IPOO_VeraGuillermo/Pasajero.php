@@ -1,54 +1,223 @@
 <?php
 
 class Pasajero{
-    private $nombre;
-    private $apellido;
-    private $numero_documento;
-    private $telefono;
+    //atributos
+    private $rdocumento;
+    private $pnombre;
+    private $papellido;
+    private $ptelefono;
+    private $idviaje;
+    private $mensajeoperacion;
 
-    public function __construct( $n, $a, $numD, $t){
-        $this->nombre = $n;
-        $this->apellido = $a;
-        $this->numero_documento = $numD;
-        $this->telefono = $t;
+    //constructor
+    public function __construct(){
+        $this->rdocumento = "";
+        $this->pnombre = "";
+        $this->papellido = "";
+        $this->ptelefono = "";
+        $this->idviaje = "";
     }
 
-    public function setNombre($nom){
-        $this->nombre = $nom;
+    //cargar atrbiutos
+    public function cargar($rDoc, $pNom, $pApe, $pTel, $pidViaj){
+        $this->setRdocumento($rDoc);
+        $this->setPnombre($pNom);
+        $this->setPapellido($pApe);
+        $this->setPtelefono($pTel);
+        $this->setIdviaje($pidViaj);
     }
 
-    public function getNombre(){
-        return $this->nombre;
+    //setter
+    public function setRdocumento($nroDoc){
+        $this->rdocumento = $nroDoc;
     }
 
-    public function setApellido($apell){
-        $this->apellido = $apell;
+    public function setPnombre($nombre){
+        $this->pnombre = $nombre;
+    }    
+
+    public function setPapellido($apell){
+        $this->papellido = $apell;
     }
 
-    public function getApellido(){
-        return $this->apellido;
+    public function setPtelefono($telef){
+        $this->ptelefono = $telef;
+    }   
+    
+    public function setIdviaje($id){
+        $this->idviaje = $id;
     }
 
-    public function setNumeroDocumento($numDoc){
-        $this->numero_documento = $numDoc;
+    public function setMensajeoperacion($mensaje){
+        $this->mensajeoperacion = $mensaje;
+    }
+    //getter
+    public function getRdocumento(){
+        return $this->rdocumento;
     }
 
-    public function getNumeroDocumento(){
-        return $this->numero_documento;
+    public function getPnombre(){
+        return $this->pnombre;
+    }    
+
+    public function getPapellido(){
+        return $this->papellido;
     }
 
-    public function setTelefono($tel){
-        $this->telefono = $tel;
+    public function getPtelefono(){
+        return $this->ptelefono;
+    }   
+    
+    public function getIdviaje(){
+        return $this->idviaje;
     }
 
-    public function getTelefono(){
-        return $this->telefono;
+    public function getMensajeoperacion(){
+        return $this->mensajeoperacion;
     }
 
-    public function __toString(){
-        return "Nombre: ".$this->getNombre()." ".$this->getApellido().
-        ". Documento: ".$this->getNumeroDocumento().". Telefono: ".$this->getTelefono();
-    }
+    /**
+	 * Recupera los datos de una persona por dni
+	 * @param int $dni
+	 * @return true en caso de encontrar los datos, false en caso contrario 
+	 */		
+    public function Buscar($nroDoc){
+		$base=new BaseDatos();
+		$consultaPersona="Select * from pasajero where rnumeroempleado=".$nroDoc;
+		$resp= false;
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaPersona)){
+				if($row2=$base->Registro()){					
+				    $this->setRdocumento($nroDoc);
+					$this->setPnombre($row2['pnombre']);
+					$this->setPapellido($row2['papellido']);
+					$this->setPtelefono($row2['ptelefono']);
+                    $this->setIdviaje($row2['idviaje']);
+					$resp= true;
+				}				
+			
+		 	}	else {
+		 			$this->setMensajeoperacion($base->getError());
+		 		
+			}
+		 }	else {
+		 		$this->setMensajeoperacion($base->getError());
+		 	
+		 }		
+		 return $resp;
+	}	
 
 
+    public function listar($condicion=""){
+	    $arregloPersona = null;
+		$base=new BaseDatos();
+		$consultaPersonas="Select * from pasajero ";
+		if ($condicion!=""){
+		    $consultaPersonas=$consultaPersonas.' where '.$condicion;
+		}
+		$consultaPersonas.=" order by papellido ";
+		//echo $consultaPersonas;
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaPersonas)){				
+				$arregloPersona= array();
+				while($row2=$base->Registro()){
+					
+					$NroDoc=$row2['rdocumento'];
+					$Nombre=$row2['pnombre'];
+					$Apellido=$row2['papellido'];
+					$Tel=$row2['ptelefono'];
+                    $IdViaje=$row2['idviaje'];
+				
+					$perso=new Pasajero();
+					$perso->cargar($NroDoc,$Nombre,$Apellido,$Tel, $IdViaje);
+					array_push($arregloPersona,$perso);
+	
+				}
+				
+			
+		 	}	else {
+		 			$this->setMensajeoperacion($base->getError());
+		 		
+			}
+		 }	else {
+		 		$this->setMensajeoperacion($base->getError());
+		 	
+		 }	
+		 return $arregloPersona;
+	}	
+
+
+	
+	public function insertar(){
+		$base=new BaseDatos();
+		$resp= false;
+		$consultaInsertar="INSERT INTO pasajero(rdocumento, pnombre, papellido,  ptelefono, idviaje) 
+				VALUES (".$this->getRdocumento().",'".$this->getPnombre()."','".$this->getPapellido()."','".$this->getPtelefono()."','".$this->getIdviaje().")";
+		
+		if($base->Iniciar()){
+
+			if($base->Ejecutar($consultaInsertar)){
+
+			    $resp=  true;
+
+			}	else {
+					$this->setMensajeoperacion($base->getError());
+					
+			}
+
+		} else {
+				$this->setMensajeoperacion($base->getError());
+			
+		}
+		return $resp;
+	}
+	
+	
+	
+	public function modificar(){
+	    $resp =false; 
+	    $base=new BaseDatos();
+		$consultaModifica="UPDATE pasajero SET pnombre='".$this->getPnombre()."',papellido='".$this->getPapellido()."'
+                           ,ptelefono='".$this->getPtelefono()."' WHERE rdocumento=". $this->getRdocumento();
+		if($base->Iniciar()){
+			if($base->Ejecutar($consultaModifica)){
+			    $resp=  true;
+			}else{
+				$this->setMensajeoperacion($base->getError());
+				
+			}
+		}else{
+				$this->setMensajeoperacion($base->getError());
+			
+		}
+		return $resp;
+	}
+	
+	public function eliminar(){
+		$base=new BaseDatos();
+		$resp=false;
+		if($base->Iniciar()){
+				$consultaBorra="DELETE FROM pasajero WHERE rdocumento=".$this->getRdocumento();
+				if($base->Ejecutar($consultaBorra)){
+				    $resp=  true;
+				}else{
+						$this->setMensajeoperacion($base->getError());
+					
+				}
+		}else{
+				$this->setMensajeoperacion($base->getError());
+			
+		}
+		return $resp; 
+	}
+
+	public function __toString(){
+	    return "\nNombre: ".$this->getPnombre(). "\n Apellido:".$this->getPapellido()."\n DNI: ".$this->getRdocumento().
+        "\nTelefono: ".$this->getPtelefono()."\nViaje: ".$this->getIdviaje()
+        ."\n";
+			
+	}
 }
+
+
+?>
