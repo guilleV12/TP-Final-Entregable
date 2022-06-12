@@ -1,6 +1,6 @@
 <?php
+include_once "BaseDatos.php";
 
-use ResponsableV as GlobalResponsableV;
 
 class ResponsableV{
     //atributos
