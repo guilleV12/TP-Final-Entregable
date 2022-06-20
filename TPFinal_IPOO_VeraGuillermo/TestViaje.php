@@ -273,6 +273,9 @@ do {
 
 					break;
 
+					default:
+                    break;
+
 				}
 			}while($varSwitchPasajeros!=4);
 			break;
