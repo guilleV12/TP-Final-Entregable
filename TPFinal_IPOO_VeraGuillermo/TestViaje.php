@@ -53,14 +53,14 @@ do {
 
 				case 2:
 							$obj_empresa= new Empresa();
-							echo "Ingrese el id de la empresa:\n";
+							echo "Ingrese el id de la empresa a modificar:\n";
 							$idEmpMod= trim(fgets(STDIN));
 							$arrayEmpresasMod=$obj_empresa->listar($idEmpMod);
 							
-							echo "Ingrese el nombre de la empresa:\n";
+							echo "Ingrese el nombre modificado de la empresa:\n";
 							$nombEmpMod= trim(fgets(STDIN));
 							$arrayEmpresasMod[0]->setEnombre($nombEmpMod);
-							echo "Ingrese la direccion de la empresa:\n";
+							echo "Ingrese la direccion modificada de la empresa:\n";
 							$dirEmpMod= trim(fgets(STDIN));
 							$arrayEmpresasMod[0]->setEdireccion($dirEmpMod);
 							$arrayEmpresasMod[0]->modificar();
@@ -184,11 +184,13 @@ do {
 						//insertar viaje en la base de datos
 						$obj_viaje->cargar($numViaje,$destViaje,$pasajMax,$idEmpViaj,$idRespViaje,$importeViaje,$tipoAs,$idaYv);
 						$respuestaV= $obj_viaje->insertar();
+						$obj_viaje->setVimporte($obj_viaje->importePasaje());
+						$obj_viaje->modificar();
 					break;
 
 					case 2:
 						//modificar datos del viaje
-							echo "Ingrese el id del viaje: \n";
+							echo "Ingrese el id del viaje a modificar: \n";
 							$idViajeMod = trim(fgets(STDIN));
 							$arrayViajeMod=$obj_viaje->listar($idViajeMod);
 							echo "Ingrese el destino de viaje: \n";
@@ -203,7 +205,7 @@ do {
 							echo "Ingrese la ida y vuelta: \n";
 							$idaYVNueva = trim(fgets(STDIN));
 							$arrayViajeMod[0]->setIdayvuelta($idaYVNueva);
-							$arrayViajeMod[0]->setVimporte($obj_viaje->importePasaje());
+							$arrayViajeMod[0]->setVimporte($arrayViajeMod[0]->importePasaje());
 							$arrayViajeMod[0]->modificar();
 					break;
 
@@ -282,6 +284,15 @@ do {
 				//mostrar datos del viaje: 
 				/////////////////////////
 				echo "\n---------------------------------\n";
+				echo "\n--------------Empresa------------\n";
+				echo "\n---------------------------------\n";
+				$colEmpresasMostrar = $obj_empresa->listar("");
+				foreach ($colEmpresasMostrar as $unaEmpresa){
+						
+					echo $unaEmpresa;
+				}	
+
+				echo "\n---------------------------------\n";
 				echo "\n--------------Viaje--------------\n";
 				echo "\n---------------------------------\n";
 				$colViajes = $obj_viaje->listar("");
@@ -290,7 +301,7 @@ do {
 					echo $unViaje;
 				}				
 				echo "\n---------------------------------\n";
-				echo "\n--------------Responsalbe--------------\n";
+				echo "\n--------------Responsalbe--------\n";
 				echo "\n---------------------------------\n";
 				$responsables = $obj_responsable->listar("");
 				foreach ($responsables as $unResponsable){
@@ -298,7 +309,7 @@ do {
 					echo $unResponsable;
 				}
 				echo "\n---------------------------------\n";
-				echo "\n--------------Pasajeros--------------\n";
+				echo "\n--------------Pasajeros----------\n";
 				echo "\n---------------------------------\n";
 
 				$obj_viaje->mostrarPasajero();
