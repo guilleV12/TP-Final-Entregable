@@ -86,12 +86,12 @@ class Empresa{
 	}	
 
 
-    public function listar($condicion=""){
+    public function listar($condicion){
 	    $arregloPersona = null;
 		$base=new BaseDatos();
 		$consultaPersonas="Select * from empresa ";
 		if ($condicion!=""){
-		    $consultaPersonas=$consultaPersonas.' where '.$condicion;
+		    $consultaPersonas=$consultaPersonas.' where '.'idempresa='.$condicion;
 		}
 		$consultaPersonas.=" order by enombre ";
 		//echo $consultaPersonas;
@@ -128,7 +128,7 @@ class Empresa{
 		$base=new BaseDatos();
 		$resp= false;
 		$consultaInsertar="INSERT INTO empresa(idempresa, enombre, edireccion) 
-				VALUES (".$this->getIdempresa()."','".$this->getEnombre()."','".$this->getEdireccion().")";
+				VALUES (".$this->getIdempresa().",'".$this->getEnombre()."','".$this->getEdireccion()."')";
 		
 		if($base->Iniciar()){
 
@@ -158,6 +158,8 @@ class Empresa{
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaModifica)){
 			    $resp=  true;
+				echo "\n-------------------------------------------------------\n";
+				echo "OP INSERCION:  La empresa fue modificada en la BD\n";
 			}else{
 				$this->setMensajeoperacion($base->getError());
 				
@@ -176,6 +178,8 @@ class Empresa{
 				$consultaBorra="DELETE FROM empresa WHERE idempresa=".$this->getIdempresa();
 				if($base->Ejecutar($consultaBorra)){
 				    $resp=  true;
+					echo "\n-------------------------------------------------------\n";
+					echo "OP INSERCION:  La empresa fue eliminada en la BD\n";
 				}else{
 						$this->setMensajeoperacion($base->getError());
 					
@@ -188,7 +192,7 @@ class Empresa{
 	}
 
 	public function __toString(){
-	    return "\nId empresa: ".$this->getIdempresa(). "\n Nombre:".$this->getEnombre()."\n Direccion: ".$this->getEdireccion()
+	    return "\nId empresa: ".$this->getIdempresa(). "\nNombre:".$this->getEnombre()."\nDireccion: ".$this->getEdireccion()
         ."\n";
 			
 	}

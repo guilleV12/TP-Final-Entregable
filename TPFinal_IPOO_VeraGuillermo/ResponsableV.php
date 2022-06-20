@@ -99,12 +99,12 @@ class ResponsableV{
 	}	
 
 
-    public function listar($condicion=""){
+    public function listar($condicion){
 	    $arregloPersona = null;
 		$base=new BaseDatos();
 		$consultaPersonas="Select * from responsable ";
 		if ($condicion!=""){
-		    $consultaPersonas=$consultaPersonas.' where '.$condicion;
+		    $consultaPersonas=$consultaPersonas.' where '.'rnumeroempleado='.$condicion;
 		}
 		$consultaPersonas.=" order by rapellido ";
 		//echo $consultaPersonas;
@@ -142,7 +142,7 @@ class ResponsableV{
 		$base=new BaseDatos();
 		$resp= false;
 		$consultaInsertar="INSERT INTO responsable(rnumeroempleado, rnumerolicencia, rnombre,  rapellido) 
-				VALUES (".$this->getRnumeroempleado().",'".$this->getRnumerolicencia()."','".$this->getRnombre()."','".$this->getRapellido().")";
+				VALUES (".$this->getRnumeroempleado().",'".$this->getRnumerolicencia()."','".$this->getRnombre()."','".$this->getRapellido()."')";
 		
 		if($base->Iniciar()){
 
@@ -202,7 +202,7 @@ class ResponsableV{
 	}
 
 	public function __toString(){
-	    return "\nNombre: ".$this->getRnombre(). "\n Apellido:".$this->getRapellido()."\n Numero empleado: ".$this->getRnumeroempleado().
+	    return "\nNombre: ".$this->getRnombre(). "\nApellido: ".$this->getRapellido()."\nNumero empleado: ".$this->getRnumeroempleado().
         "\nNumero licencia: ".$this->getRnumerolicencia()
         ."\n";
 			

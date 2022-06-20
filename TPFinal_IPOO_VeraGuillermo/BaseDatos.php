@@ -57,7 +57,7 @@ class BaseDatos {
             $this->ERROR =  mysqli_errno($conexion) . ": " .mysqli_error($conexion);
         }
         return $resp;
-    }
+    } 
     
     /**
      * Ejecuta una consulta en la Base de Datos.
