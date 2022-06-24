@@ -170,8 +170,10 @@ do {
 						$pasajMax= trim(fgets(STDIN));
 						echo "Ingrese el id de la empresa a quien pertenece:\n";
 						$idEmpViaj= trim(fgets(STDIN));
+						$empresaPert=$obj_empresa->listar($idEmpViaj);
 						echo "Ingrese el id del resposable del viaje:\n";
 						$idRespViaje= trim(fgets(STDIN));
+						$responsablePert=$obj_responsable->listar($idRespViaje);
 						echo "Ingrese el importe del viaje: \n";
 						$importeViaje= trim(fgets(STDIN));
 						echo "Ingrese el tipo de asiento: \n";
@@ -182,7 +184,7 @@ do {
 						//creo un objeto viaje
 					
 						//insertar viaje en la base de datos
-						$obj_viaje->cargar($numViaje,$destViaje,$pasajMax,$idEmpViaj,$idRespViaje,$importeViaje,$tipoAs,$idaYv);
+						$obj_viaje->cargar($numViaje,$destViaje,$pasajMax,$empresaPert[0]->getIdempresa(),$responsablePert[0]->getRnumeroempleado(),$importeViaje,$tipoAs,$idaYv);
 						$respuestaV= $obj_viaje->insertar();
 						$obj_viaje->setVimporte($obj_viaje->importePasaje());
 						$obj_viaje->modificar();

@@ -1,6 +1,5 @@
 <?php
 include_once "BaseDatos.php";
-
 class Viaje{
     //atributos
     private $idviaje;
