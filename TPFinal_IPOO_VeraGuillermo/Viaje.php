@@ -270,26 +270,31 @@ class Viaje{
 
 	public function agregarPasajero($doc, $nomb, $ape, $telef){
 		$obj_pasajero = new Pasajero();
+		$listaPas = $obj_pasajero->listar("");
+		$cantAsientosDisp = $this->getVcantmaxpasajeros()-count($listaPas);
 
 		$bandera=$obj_pasajero->Buscar($doc);
-		
-		if ($bandera==false) {
-			$obj_pasajeroNuevo= new Pasajero();
-			$this->setVcantmaxpasajeros($this->getVcantmaxpasajeros()-1);
-			$this->modificar();
-			//insertar persona de la base de datos
-			$obj_pasajeroNuevo->cargar($doc, $nomb, $ape, $telef,$this->getIdviaje());
-			$respuesta= $obj_pasajeroNuevo->insertar();
+		if ($cantAsientosDisp >0){
+			if ($bandera==false) {
+				$obj_pasajeroNuevo= new Pasajero();
 
-			if($respuesta == true){
-				echo "-------------------------------------------------------\n";
-				echo "OP INSERCION:  El pasajero fue ingresado en la BD\n";
 				
-			}else {
-				echo $obj_pasajeroNuevo->getmensajeoperacion();
-			}		
+				//insertar persona de la base de datos
+				$obj_pasajeroNuevo->cargar($doc, $nomb, $ape, $telef,$this->getIdviaje());
+				$respuesta= $obj_pasajeroNuevo->insertar();
+
+				if($respuesta == true){
+					echo "-------------------------------------------------------\n";
+					echo "OP INSERCION:  El pasajero fue ingresado en la BD\n";
+					
+				}else {
+					echo $obj_pasajeroNuevo->getmensajeoperacion();
+				}		
+			}else{
+				echo "El pasajero ya esta en el viaje\n";
+			}
 		}else{
-			echo "El pasajero ya esta en el viaje\n";
+			echo "\nEl viaje esta lleno\n";
 		}
 	}
 
