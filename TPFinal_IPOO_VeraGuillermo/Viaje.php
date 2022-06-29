@@ -330,12 +330,12 @@ class Viaje{
 	public function importePasaje(){
 		$importe = $this->getVimporte();
 		if ($this->getIdayvuelta()=="si"){
-			if ($this->getTipoasiento()=="cama"){
+			if (strtolower($this->getTipoasiento())=="cama"){
 				$importe = $importe + ($importe / 100 * 25);
 			}
 			$importe = $importe + ($importe / 100 * 50);
 		} else {
-			if ($this->getTipoasiento()=="cama"){
+			if (strtolower($this->getTipoasiento())=="cama"){
 				$importe = $importe + ($importe / 100 * 25);
 			}
 		}

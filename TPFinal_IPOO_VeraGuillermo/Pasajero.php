@@ -218,7 +218,7 @@ class Pasajero{
 
 	public function __toString(){
 	    return "\nNombre: ".$this->getPnombre(). "\nApellido: ".$this->getPapellido()."\nDNI: ".$this->getRdocumento().
-        "\nTelefono: ".$this->getPtelefono()
+        "\nTelefono: ".$this->getPtelefono()."\nViaje : ".$this->getIdviaje()
         ."\n";
 			
 	}

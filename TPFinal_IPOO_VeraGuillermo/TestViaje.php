@@ -38,6 +38,7 @@ do {
 						//creo un objeto empresa
 						echo "Ingrese el numero de la empresa:\n";
 						$idEmpIng= trim(fgets(STDIN));
+						if (count($obj_empresa->listar($idEmpIng)) == 0){
 						echo "Ingrese el nombre de la empresa:\n";
 						$nombEmpIng= trim(fgets(STDIN));
 						echo "Ingrese la direccion de la empresa:\n";
@@ -49,6 +50,9 @@ do {
 																		
 							echo "\n-------------------------------------------------------\n";
 							echo "OP INSERCION:  La empresa fue ingresada en la BD\n";
+						}else{
+							echo "\nLa empresa ya existe\n";
+						}
 				break;
 
 				case 2:
@@ -56,7 +60,9 @@ do {
 							echo "Ingrese el id de la empresa a modificar:\n";
 							$idEmpMod= trim(fgets(STDIN));
 							$arrayEmpresasMod=$obj_empresa->listar($idEmpMod);
-							
+							if (count($obj_empresa->listar($idEmpMod)) == 0) {
+								echo "\nNo existe la empresa\n";
+							}else{
 							echo "Ingrese el nombre modificado de la empresa:\n";
 							$nombEmpMod= trim(fgets(STDIN));
 							$arrayEmpresasMod[0]->setEnombre($nombEmpMod);
@@ -64,14 +70,19 @@ do {
 							$dirEmpMod= trim(fgets(STDIN));
 							$arrayEmpresasMod[0]->setEdireccion($dirEmpMod);
 							$arrayEmpresasMod[0]->modificar();
+							}
 				break;
 
 				case 3:
 							$obj_empresa= new Empresa();
 							echo "\nIngrese el id de empresa a eliminar:\n";
 							$idEmpElim= trim(fgets(STDIN));
+							if (count($obj_empresa->listar($idEmpElim)) == 0) {
+								echo "\nNo existe la empresa\n";
+							}else{
 							$arrayEmpresasElim=$obj_empresa->listar($idEmpElim);
 							$arrayEmpresasElim[0]->eliminar();
+							}
 				break;
 			}
 			
@@ -99,6 +110,8 @@ do {
 						$apellidoResp=trim(fgets(STDIN));
 						echo "Ingrese el id del responsable de los viajes:\n";
 						$numeroResp = trim(fgets(STDIN));
+						if (count($obj_responsable->listar($numeroResp)) == 0) {
+							
 						echo "Ingrese la licencia del responsable de los viajes:\n";
 						$liceResp = trim(fgets(STDIN));
 			
@@ -113,12 +126,16 @@ do {
 						echo "-------------------------------------------------------\n";
 						echo "OP INSERCION:  El responsable fue ingresada en la BD\n";
 					}
+				}else{
+					echo "\nEl responsable ya existe\n";
+				}
 				break;
 
 				case 2:
 					$obj_responsable= new ResponsableV();
 					echo "Ingrese el id del reponsable a modificar:\n";
 					$idRespMod=trim(fgets(STDIN));
+					if (count($obj_responsable->listar($idRespMod)) != 0){
 					$arrayRespMod=$obj_responsable->listar($idRespMod);
 					
 					echo "Ingrese el nombre del responsable de los viajes:\n";
@@ -131,13 +148,20 @@ do {
 					$liceRespMod= trim(fgets(STDIN));
 					$arrayRespMod[0]->setRnumerolicencia($liceRespMod);
 					$arrayRespMod[0]->modificar();
+					}else{
+						echo "\nEl responsable no existe\n";
+					}
 				break;
 
 				case 3:
 					echo "\nIngrese el id del responsable a eliminar:\n";
 					$idRespElim= trim(fgets(STDIN));
-					$arrayRespElim=$obj_responsable->listar($idRespMod);
+					if (count($obj_responsable->listar($idRespElim)) != 0){
+					$arrayRespElim=$obj_responsable->listar($idRespElim);
 					$arrayRespElim[0]->eliminar();
+					}else{
+						echo "\nEl responsable no existe.\n";
+					}
 				break;
 
 
@@ -164,6 +188,9 @@ do {
 						//cargar y ver los datos del viaje
 						echo "\nIngrese el numero de viaje:\n"; 
 						$numViaje = trim(fgets(STDIN));
+						if (count($obj_viaje->listar($numViaje)) != 0 ){
+							echo "\nEl viaje ya existe.\n";
+						}else {
 						echo "Ingrese el destino:\n";
 						$destViaje = trim(fgets(STDIN));
 						echo "Ingrese cantidad maxima de pasajeros:\n";
@@ -176,18 +203,19 @@ do {
 						$responsablePert=$obj_responsable->listar($idRespViaje);
 						echo "Ingrese el importe del viaje: \n";
 						$importeViaje= trim(fgets(STDIN));
-						echo "Ingrese el tipo de asiento: \n";
-						$tipoAs= trim(fgets(STDIN));
+						do {
+							echo "Ingrese el tipo de asiento (cama/semicama): \n";
+							$tipoAs= trim(fgets(STDIN));
+						} while (($tipoAs != "cama") && ($tipoAs != "semicama"));
 						echo "Es de ida y vuelta?:\n";
 						$idaYv= trim(fgets(STDIN));
-					
 						//creo un objeto viaje
-					
 						//insertar viaje en la base de datos
 						$obj_viaje->cargar($numViaje,$destViaje,$pasajMax,$empresaPert[0]->getIdempresa(),$responsablePert[0]->getRnumeroempleado(),$importeViaje,$tipoAs,$idaYv);
 						$respuestaV= $obj_viaje->insertar();
 						$obj_viaje->setVimporte($obj_viaje->importePasaje());
 						$obj_viaje->modificar();
+						}
 					break;
 
 					case 2:
@@ -195,6 +223,9 @@ do {
 							echo "Ingrese el id del viaje a modificar: \n";
 							$idViajeMod = trim(fgets(STDIN));
 							$arrayViajeMod=$obj_viaje->listar($idViajeMod);
+							if (count($arrayViajeMod) == 0 ){
+								echo "\nEl viaje no existe.\n";
+							}else {
 							echo "Ingrese el destino de viaje: \n";
 							$destViajeMod = trim(fgets(STDIN));
 							$arrayViajeMod[0]->setVdestino($destViajeMod);
@@ -209,13 +240,18 @@ do {
 							$arrayViajeMod[0]->setIdayvuelta($idaYVNueva);
 							$arrayViajeMod[0]->setVimporte($arrayViajeMod[0]->importePasaje());
 							$arrayViajeMod[0]->modificar();
+							}
 					break;
 
 					case 3:
 						echo "\nIngrese el id del viaje a eliminar:\n";
 						$idViajeElim= trim(fgets(STDIN));
+						if (count($obj_viaje->listar($idViajeElim)) != 0){
 						$arrayViajeElim=$obj_viaje->listar($idViajeElim);
 						$arrayViajeElim[0]->eliminar();
+						}else{
+							echo "\nEl viaje no existe.\n";
+						}
 					break;
 
 				}
@@ -239,6 +275,7 @@ do {
 					case 1:
 						echo "Ingrese el documento:\n";
 						$respDocNuevo= trim(fgets(STDIN));
+						if (count($obj_pasajero->listar($respDocNuevo)) == 0){
 						echo "Ingrese nombre:\n";
 						$respNomNuevo= trim(fgets(STDIN));
 						echo "Ingrese apellido:\n";
@@ -249,12 +286,16 @@ do {
 						$idViajeCorr= trim(fgets(STDIN));
 						$arrayViajesIng=$obj_viaje->listar($idViajeCorr);
 						$arrayViajesIng[0]->agregarPasajero($respDocNuevo,$respNomNuevo,$respApeNuevo,$respTelNuevo);
+						}else{
+							echo "\nEl pasajero ya existe.\n";
+						}
 					break;
 					
 					case 2:
 					//modificar datos de pasajeros
 						echo "Ingrese el nro de documento: \n";
 						$docModificar= trim(fgets(STDIN));
+						if (count($obj_pasajero->listar($docModificar)) != 0){
 						echo "Ingrese nombre:\n";
 						$nombreMod= trim(fgets(STDIN));
 						echo "Ingrese apellido:\n";
@@ -265,13 +306,20 @@ do {
 						$idPasajVMod= trim(fgets(STDIN));
 						$arrayPasajMod = $obj_viaje->listar($idPasajVMod);
 						$arrayPasajMod[0]->cambiarDatosUnPasajero($docModificar,$nombreMod,$apellidoMod,$telefonoMod);
+						}else{
+							echo "\nNo existe ese pasajero\n";
+						}
 					break;
 
 					case 3:
 						echo "\nIngrese el nro de documento del pasajero a eliminar:\n";
 						$idPasajeroElim= trim(fgets(STDIN));
+						if (count($obj_pasajero->listar($idPasajeroElim)) != 0){
 						$arrayPasajeroElim=$obj_pasajero->listar($idPasajeroElim);
 						$arrayPasajeroElim[0]->eliminar();
+						}else{
+							echo "\nEl pasajero no existe.\n";
+						}
 
 					break;
 
