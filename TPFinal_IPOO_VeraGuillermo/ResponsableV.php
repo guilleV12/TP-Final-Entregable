@@ -75,7 +75,7 @@ class ResponsableV{
 	 */		
     public function Buscar($nroEmp){
 		$base=new BaseDatos();
-		$consultaPersona="Select * from responsable where rnumeroempleado=".$nroEmp;
+		$consultaPersona='SELECT * from responsable where rnumeroempleado='.$nroEmp;
 		$resp= false;
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaPersona)){
@@ -99,41 +99,38 @@ class ResponsableV{
 	}	
 
 
-    public function listar($condicion){
-	    $arregloPersona = null;
+    public function listar($campo,$condicion){
+	    $resp = null;
 		$base=new BaseDatos();
-		$consultaPersonas="Select * from responsable ";
-		if ($condicion!=""){
-		    $consultaPersonas=$consultaPersonas.' where '.'rnumeroempleado='.$condicion;
+		$consultaPersonas="SELECT * from responsable ";
+		if ($campo != ""){
+			$consultaPersonas.=' where '.$campo.'='.$condicion;
 		}
-		$consultaPersonas.=" order by rapellido ";
 		//echo $consultaPersonas;
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaPersonas)){				
-				$arregloPersona= array();
+				$resp= [];
 				while($row2=$base->Registro()){
 					
 					$nroEmp=$row2['rnumeroempleado'];
-					$nroLic=$row2['rnumerolicencia'];
-					$nombre=$row2['rnombre'];
-					$apellido=$row2['rapellido'];
-				
 					$perso=new ResponsableV();
-					$perso->cargar($nroEmp,$nroLic,$nombre,$apellido);
-					array_push($arregloPersona,$perso);
+					$perso->Buscar($nroEmp);
+					array_push($resp,$perso);
 	
 				}
 				
 			
 		 	}	else {
+					$resp=false;
 		 			$this->setMensajeoperacion($base->getError());
 		 		
 			}
 		 }	else {
+				$resp=false;
 		 		$this->setMensajeoperacion($base->getError());
 		 	
 		 }	
-		 return $arregloPersona;
+		 return $resp;
 	}	
 
 

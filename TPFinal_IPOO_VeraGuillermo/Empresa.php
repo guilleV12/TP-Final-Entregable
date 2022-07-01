@@ -86,27 +86,24 @@ class Empresa{
 	}	
 
 
-    public function listar($condicion){
-	    $arregloPersona = null;
+    public function listar($campo,$condicion){
+	    $resp = null;
 		$base=new BaseDatos();
 		$consultaPersonas="Select * from empresa ";
-		if ($condicion!=""){
-		    $consultaPersonas=$consultaPersonas.' where '.'idempresa='.$condicion;
+		if ($campo != "" && $condicion != ""){
+			$consultaPersonas.=' where '.$campo.'='.$condicion;
 		}
-		$consultaPersonas.=" order by enombre ";
 		//echo $consultaPersonas;
 		if($base->Iniciar()){
 			if($base->Ejecutar($consultaPersonas)){				
-				$arregloPersona= array();
+				$resp= [];
 				while($row2=$base->Registro()){
 					
 					$idEmp=$row2['idempresa'];
-					$nombre=$row2['enombre'];
-					$direccion=$row2['edireccion'];
 				
 					$perso=new Empresa();
-					$perso->cargar($idEmp, $nombre, $direccion);
-					array_push($arregloPersona,$perso);
+					$perso->Buscar($idEmp);
+					array_push($resp,$perso);
 	
 				}
 				
@@ -119,7 +116,7 @@ class Empresa{
 		 		$this->setMensajeoperacion($base->getError());
 		 	
 		 }	
-		 return $arregloPersona;
+		 return $resp;
 	}	
 
 
